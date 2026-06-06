@@ -63,6 +63,7 @@ export default function MovieModal({ movie, onClose }: MovieModalProps) {
           <p className={css.rating}>
             Рейтинг: {movie.vote_average.toFixed(1)} / 10
           </p>
+          <p>Дата релізу: {movie.release_date || "Невідома"}</p>
           <p className={css.overview}>
             {movie.overview || "Опис цього фільму поки відсутній."}
           </p>

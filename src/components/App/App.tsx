@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import toast, { Toaster } from "react-hot-toast";
 import ReactPaginate from "react-paginate";
 import { fetchMovies } from "../../services/movieService";
 import type { Movie } from "../../types/movie";
@@ -31,8 +32,17 @@ export default function App() {
   const movies = data?.results ?? [];
   const totalPages = data?.total_pages ?? 0;
 
+  useEffect(() => {
+    if (data && !isFetching && data.results.length === 0) {
+      toast.error("За вашим запитом нічого не знайдено.", {
+        id: "no-movies",
+      });
+    }
+  }, [data, isFetching]);
+
   return (
     <main className={css.container}>
+      <Toaster position="top-right" />
       <h1 className={css.title}>Пошук фільмів</h1>
       <SearchBar onSubmit={handleSearch} />
 
@@ -45,10 +55,6 @@ export default function App() {
               : "Не вдалося завантажити фільми."
           }
         />
-      )}
-
-      {!isError && query && !isLoading && movies.length === 0 && (
-        <p className={css.empty}>За вашим запитом нічого не знайдено.</p>
       )}
 
       {movies.length > 0 && (
