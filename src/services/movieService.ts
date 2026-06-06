@@ -8,23 +8,18 @@ const tmdbApi = axios.create({
   },
 });
 
+const TMDB_API_KEY = "f4a1e146c46369c520585746a0a1aea3";
+
 export const fetchMovies = async (
   query: string,
   page: number,
 ): Promise<MoviesResponse> => {
   const token = import.meta.env.VITE_TMDB_TOKEN;
 
-  if (!token) {
-    throw new Error(
-      "Не задано VITE_TMDB_TOKEN. Додайте токен TMDB до файлу .env.",
-    );
-  }
-
   const response = await tmdbApi.get<MoviesResponse>("/search/movie", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
     params: {
+      ...(!token && { api_key: TMDB_API_KEY }),
       query,
       page,
       include_adult: false,
