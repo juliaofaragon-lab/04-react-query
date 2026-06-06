@@ -15,8 +15,6 @@ const tmdbApi = axios.create({
   },
 });
 
-const TMDB_API_KEY = "f4a1e146c46369c520585746a0a1aea3";
-
 export const fetchMovies = async (
   query: string,
   page: number,
@@ -24,9 +22,10 @@ export const fetchMovies = async (
   const token = import.meta.env.VITE_TMDB_TOKEN;
 
   const response = await tmdbApi.get<MoviesResponse>("/search/movie", {
-    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     params: {
-      ...(!token && { api_key: TMDB_API_KEY }),
       query,
       page,
       include_adult: false,
